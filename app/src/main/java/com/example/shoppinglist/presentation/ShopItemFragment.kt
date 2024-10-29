@@ -51,7 +51,7 @@ class ShopItemFragment(
 
 
     /**
-     * Подписка на обьекты Вью Модели
+     * Подписка на объекты ViewModel для обработки ошибок ввода и завершения экрана
      */
     private fun observeViewModel() {
         viewModel.errorInputName.observe(viewLifecycleOwner) {
@@ -67,7 +67,7 @@ class ShopItemFragment(
     }
 
     /**
-     * Выбор режима экрана
+     * Выбор и запуск режима экрана (добавление или редактирование)
      */
     private fun choiceMode() {
 
@@ -78,7 +78,7 @@ class ShopItemFragment(
     }
 
     /**
-     * Добавление слушателей изменения текста для скрытия ошибки
+     * Добавление слушателей изменения текста для скрытия ошибок ввода
      */
     private fun addTextChangeListeners() {
         etName.addTextChangedListener {
@@ -90,10 +90,9 @@ class ShopItemFragment(
     }
 
     /**
-     * Метод для обработки паметров, устанавливающих режим экрана
-     * и ID элемента списка для редактирования.
+     * Проверка параметров, устанавливающих режим экрана и ID элемента для редактирования
      * @throws RuntimeException если не передан необходимый параметр
-     * или если передано неизвестное значение режима экрана.
+     * или если передано неизвестное значение режима экрана
      */
     private fun parseParams() {
         if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
@@ -106,9 +105,8 @@ class ShopItemFragment(
 
     }
 
-
     /**
-     * Инициализация всех вью
+     * Инициализация всех View фрагмента
      */
     private fun initViews(view: View) {
         tilName = view.findViewById(R.id.til_name)
@@ -118,12 +116,18 @@ class ShopItemFragment(
         buttonSave = view.findViewById(R.id.button_save)
     }
 
+    /**
+     * Запуск в режиме добавдления
+     */
     private fun launchAddMode() {
         buttonSave.setOnClickListener {
             viewModel.addShopItem(etName.text?.toString(), etCount.text?.toString())
         }
     }
 
+    /**
+     * Запуск в режиме редактирования
+     */
     private fun launchEditMode() {
         viewModel.getShopItem(shopItemId)
         viewModel.shopItem.observe(viewLifecycleOwner) {
@@ -136,33 +140,26 @@ class ShopItemFragment(
     }
 
     companion object {
-        private const val EXTRA_SCREEN_MODE = "extra_mode"
         private const val MODE_ADD = "mode_add"
         private const val MODE_EDIT = "mode_edit"
-        private const val EXTRA_SHOP_ITEM_ID = "extra_shop_item_id"
         private const val UNDEFINED_ID = -1
         private const val MODE_UNKNOWN = ""
 
+        /**
+         * Создает экземпляр фрагмента для добавления нового элемента списка
+         * @return ShopItemFragment, настроенный для режима добавления
+         */
         fun newInstanceAddShopItem(): ShopItemFragment {
             return ShopItemFragment(MODE_ADD)
         }
 
+        /**
+         * Создает экземпляр фрагмента для редактирования существующего элемента списка
+         * @param shopItemId ID элемента, который нужно редактировать
+         * @return ShopItemFragment, настроенный для режима редактирования
+         */
         fun newInstanceEditShopItem(shopItemId: Int): ShopItemFragment {
             return ShopItemFragment(MODE_EDIT, shopItemId)
-        }
-
-        fun newIntentAddShopItem(context: Context): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
-            return intent
-        }
-
-        fun newIntentEditShopItem(context: Context, shopItemId: Int): Intent {
-            val intent = Intent(context, ShopItemActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
-
-            return intent
         }
     }
 }
