@@ -1,7 +1,6 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,8 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
-
-private const val TAG = "MainActivity"
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var rvShopList: RecyclerView
     private lateinit var shopItemAdapter: ShopItemAdapter
+
+    private lateinit var buttonAddItem: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +31,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupRecyclerView()
+        setupViewModel()
 
+        setupButtonAddShopItem()
+
+    }
+
+    /**
+     * Настройка Вью Модели
+     */
+    private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) { shopList ->
             shopItemAdapter.submitList(shopList)
         }
-
     }
 
     /**
@@ -62,8 +70,11 @@ class MainActivity : AppCompatActivity() {
         setupSwipeListener()
     }
 
+    /**
+     * Настройка свайпа
+     */
     private fun setupSwipeListener() {
-        val callback = object :ItemTouchHelper.SimpleCallback(
+        val callback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT,
         ) {
@@ -85,12 +96,34 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
 
-    private fun setupClickListener() {
-        shopItemAdapter.onShopItemClickListener = {
-            Log.d(TAG, "$it")
+    /**
+     * Настройка кнопки добавления
+     *
+     * Запускает ShopItemActivity в режиме добавления
+     */
+    private fun setupButtonAddShopItem() {
+        buttonAddItem = findViewById(R.id.button_add_new_item)
+        buttonAddItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddShopItem(this)
+            startActivity(intent)
         }
     }
 
+    /**
+     * Настройка тапа по Итему для редактирования
+     *
+     * Запускает ShopItemActivity в режиме редактирования
+     */
+    private fun setupClickListener() {
+        shopItemAdapter.onShopItemClickListener = {
+            val intent = ShopItemActivity.newIntentEditShopItem(this, it.id)
+            startActivity(intent)
+        }
+    }
+
+    /**
+     * Настройка долгого нажатия для изменеия статуса активный/неактивный
+     */
     private fun setupLongClickListener() {
         shopItemAdapter.onShopItemLongClickListener = {
             viewModel.changeIsEnabledState(it)
