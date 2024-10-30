@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var rvShopList: RecyclerView
     private lateinit var shopItemAdapter: ShopItemAdapter
-
     private lateinit var buttonAddItem: FloatingActionButton
+    private var shopItemContainer: FragmentContainerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +30,26 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        shopItemContainer = findViewById(R.id.shop_item_container)
+
+
         setupRecyclerView()
         setupViewModel()
 
         setupButtonAddShopItem()
 
+    }
+
+    private fun isOnePaneMode(): Boolean {
+        return shopItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shop_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     /**
@@ -102,8 +119,12 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtonAddShopItem() {
         buttonAddItem = findViewById(R.id.button_add_new_item)
         buttonAddItem.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAddShopItem(this)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAddShopItem(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddShopItem())
+            }
         }
     }
 
@@ -114,8 +135,12 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupClickListener() {
         shopItemAdapter.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEditShopItem(this, it.id)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentEditShopItem(this, it.id)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceEditShopItem(it.id))
+            }
         }
     }
 

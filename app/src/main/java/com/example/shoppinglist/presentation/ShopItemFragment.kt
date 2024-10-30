@@ -1,6 +1,7 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class ShopItemFragment : Fragment() {
     private var shopItemId: Int = UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("ShopItemFragment", "onCreate")
         super.onCreate(savedInstanceState)
         parseParams()
     }
