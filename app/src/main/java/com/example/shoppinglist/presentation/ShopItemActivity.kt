@@ -3,12 +3,14 @@ package com.example.shoppinglist.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.shoppinglist.R
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = UNDEFINED_ID
@@ -87,5 +89,14 @@ class ShopItemActivity : AppCompatActivity() {
 
             return intent
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(
+            this,
+            "Редактирование завершено успешно",
+            Toast.LENGTH_SHORT
+        ).show()
+        finish()
     }
 }

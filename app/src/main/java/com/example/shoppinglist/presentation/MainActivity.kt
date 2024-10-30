@@ -1,6 +1,7 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
 
@@ -151,6 +152,14 @@ class MainActivity : AppCompatActivity() {
         shopItemAdapter.onShopItemLongClickListener = {
             viewModel.changeIsEnabledState(it)
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(
+            this@MainActivity,
+            "Редактирование завершено успешно",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 }
