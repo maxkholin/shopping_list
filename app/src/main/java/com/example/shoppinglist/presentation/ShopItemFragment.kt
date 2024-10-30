@@ -1,7 +1,5 @@
 package com.example.shoppinglist.presentation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
 import com.google.android.material.textfield.TextInputLayout
 
-class ShopItemFragment(
-    private val screenMode: String = MODE_UNKNOWN,
-    private val shopItemId: Int = UNDEFINED_ID
-) : Fragment() {
-
+class ShopItemFragment : Fragment() {
+    
     private lateinit var viewModel: ShopItemViewModel
 
     private lateinit var tilName: TextInputLayout
@@ -27,6 +22,13 @@ class ShopItemFragment(
     private lateinit var etCount: EditText
     private lateinit var buttonSave: Button
 
+    private var screenMode: String = MODE_UNKNOWN
+    private var shopItemId: Int = UNDEFINED_ID
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +41,6 @@ class ShopItemFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        parseParams()
         initViews(view)
 
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
@@ -95,12 +96,22 @@ class ShopItemFragment(
      * или если передано неизвестное значение режима экрана
      */
     private fun parseParams() {
-        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
+        val args = requireArguments()
+
+        if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Не передан режим экрана")
         }
 
-        if (screenMode == MODE_EDIT && shopItemId == UNDEFINED_ID) {
-            throw RuntimeException("Не передан ID редактируемого элемента")
+        screenMode = args.getString(SCREEN_MODE).toString()
+        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
+            throw RuntimeException("Неизвестный режим $screenMode")
+        }
+
+        if (screenMode == MODE_EDIT) {
+            if (!args.containsKey(SHOP_ITEM_ID)) {
+                throw RuntimeException("Не передан ID редактируемого элемента")
+            }
+            shopItemId = args.getInt(SHOP_ITEM_ID, UNDEFINED_ID)
         }
 
     }
@@ -140,6 +151,8 @@ class ShopItemFragment(
     }
 
     companion object {
+        private const val SCREEN_MODE = "extra_mode"
+        private const val SHOP_ITEM_ID = "extra_shop_item_id"
         private const val MODE_ADD = "mode_add"
         private const val MODE_EDIT = "mode_edit"
         private const val UNDEFINED_ID = -1
@@ -150,8 +163,14 @@ class ShopItemFragment(
          * @return ShopItemFragment, настроенный для режима добавления
          */
         fun newInstanceAddShopItem(): ShopItemFragment {
-            return ShopItemFragment(MODE_ADD)
+
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_ADD)
+                }
+            }
         }
+
 
         /**
          * Создает экземпляр фрагмента для редактирования существующего элемента списка
@@ -159,7 +178,13 @@ class ShopItemFragment(
          * @return ShopItemFragment, настроенный для режима редактирования
          */
         fun newInstanceEditShopItem(shopItemId: Int): ShopItemFragment {
-            return ShopItemFragment(MODE_EDIT, shopItemId)
+
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, MODE_EDIT)
+                    putInt(SHOP_ITEM_ID, shopItemId)
+                }
+            }
         }
     }
 }
