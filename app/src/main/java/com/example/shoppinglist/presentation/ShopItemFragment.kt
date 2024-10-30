@@ -14,9 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
 import com.google.android.material.textfield.TextInputLayout
 
+
 class ShopItemFragment : Fragment() {
 
-    private  lateinit var onEditingFinishedListener: OnEditingFinishedListener
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private lateinit var viewModel: ShopItemViewModel
 
@@ -31,11 +32,11 @@ class ShopItemFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-       if (context is OnEditingFinishedListener) {
-           onEditingFinishedListener = context
-       } else {
-           throw RuntimeException("Активити должна реализовывать OnEditingFinishedListener")
-       }
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("Активити должна реализовывать OnEditingFinishedListener")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
