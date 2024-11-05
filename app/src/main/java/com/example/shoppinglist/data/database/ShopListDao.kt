@@ -11,18 +11,15 @@ import androidx.room.Update
 interface ShopListDao {
 
     @Query("SELECT * FROM shop_items")
-    fun getShopList(): LiveData<List<ShopItemEntity>>
+    fun getShopList(): LiveData<List<ShopItemDbEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addShopItem(shopItem: ShopItemEntity)
+    suspend fun addShopItem(shopItem: ShopItemDbEntity)
 
     @Query("DELETE FROM shop_items WHERE id = :shopItemEntityId")
     suspend fun removeShopItemEntity(shopItemEntityId: Int)
 
     @Query("SELECT * FROM shop_items WHERE id = :shopItemId LIMIT 1")
-    fun getShopIteById(shopItemId: Int): ShopItemEntity
-
-    @Update
-    suspend fun editShopItemEntity(shopItem: ShopItemEntity)
+    suspend fun getShopIteById(shopItemId: Int): ShopItemDbEntity
 
 }
