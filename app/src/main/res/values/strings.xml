@@ -6,4 +6,5 @@
     <string name="save">Сохранить</string>
     <string name="error_input_name">Введите название</string>
     <string name="error_input_count">Неверное количество</string>
+    <string name="edit_success">Редактирование завершено успешно</string>
 </resources>

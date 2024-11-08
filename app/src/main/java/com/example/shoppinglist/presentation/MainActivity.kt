@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.databinding.ActivityMainBinding
+import com.example.shoppinglist.presentation.adapter.ShopItemAdapter
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка Вью Модели
+     * Настройка Вью Модели.
      */
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка Ресайклер Вью
+     * Настройка Ресайклер Вью.
      */
     private fun setupRecyclerView() {
         shopItemAdapter = ShopItemAdapter()
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка свайпа
+     * Настройка свайпа.
      */
     private fun setupSwipeListener(rvShopList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
@@ -109,9 +110,9 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка кнопки добавления
+     * Настройка кнопки добавления.
      *
-     * Запускает ShopItemActivity в режиме добавления
+     * Запускает ShopItemActivity в режиме добавления.
      */
     private fun setupButtonAddShopItem() {
         binding.buttonAddNewItem.setOnClickListener {
@@ -125,9 +126,9 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка тапа по Итему для редактирования
+     * Настройка тапа по Итему для редактирования.
      *
-     * Запускает ShopItemActivity в режиме редактирования
+     * Запускает ShopItemActivity в режиме редактирования.
      */
     private fun setupClickListener() {
         shopItemAdapter.onShopItemClickListener = {
@@ -141,7 +142,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     /**
-     * Настройка долгого нажатия для изменеия статуса активный/неактивный
+     * Настройка долгого нажатия для изменеия статуса активный/неактивный.
      */
     private fun setupLongClickListener() {
         shopItemAdapter.onShopItemLongClickListener = {
@@ -152,7 +153,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     override fun onEditingFinished() {
         Toast.makeText(
             this@MainActivity,
-            "Редактирование завершено успешно",
+            getString(R.string.edit_success),
             Toast.LENGTH_SHORT
         ).show()
     }
