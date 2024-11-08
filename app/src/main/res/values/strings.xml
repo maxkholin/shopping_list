@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Shopping List</string>
+    <string name="add_new_shop_item">Добавить новую запись</string>
+    <string name="name_hint">Название:</string>
+    <string name="count_hint">Количество:</string>
+    <string name="save">Сохранить</string>
+    <string name="error_input_name">Введите название</string>
+    <string name="error_input_count">Неверное количество</string>
+    <string name="edit_success">Редактирование завершено успешно</string>
+</resources>
